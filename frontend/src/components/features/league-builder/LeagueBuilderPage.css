@@ -1,0 +1,364 @@
+.league-page-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.league-page-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 24px 80px;
+}
+
+.league-page-container {
+  max-width: 921px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.league-page-title {
+  font-size: 40px;
+  font-weight: 600;
+  text-align: center;
+  color: #000;
+}
+
+@media (min-width: 1024px) {
+  .league-page-title {
+    font-size: 64px;
+  }
+}
+
+.league-page-tabs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+}
+
+.league-page-tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  height: 45px;
+  position: relative;
+}
+
+.league-page-tab {
+  font-size: 16px;
+  color: #3f3f46;
+}
+
+.league-page-tab--active {
+  color: #129a5f;
+}
+
+.league-page-tab-separator {
+  width: 1px;
+  height: 100%;
+  background-color: #129a5f;
+}
+
+.league-page-tab-pill {
+  position: absolute;
+  bottom: 0;
+  height: 29px;
+  width: 72px;
+  border-radius: 16px;
+  background-color: rgba(18, 154, 95, 0.15);
+  transform: translateX(140%);
+}
+
+.league-config-card {
+  width: 100%;
+  max-width: 793px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #f9f9f9;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.league-config-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.league-config-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(18, 154, 95, 0.5);
+}
+
+.league-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.league-chip {
+  padding: 3px 23px;
+  border-radius: 16px;
+  border: 1px solid #129a5f;
+  font-size: 16px;
+  font-weight: 500;
+  color: #129a5f;
+  background-color: transparent;
+}
+
+.league-chip--pill {
+  padding: 7px 23px;
+  height: 27px;
+}
+
+.league-chip--primary {
+  background-color: #10af70;
+  color: #ffffff;
+  border-color: #10af70;
+}
+
+.league-results-grid {
+  width: 100%;
+  max-width: 793px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.league-result-row {
+  display: grid;
+  width: 793px;
+  height: 471px;
+  padding: 20px;
+  row-gap: 16px;
+  column-gap: 16px;
+  flex-shrink: 0;
+  grid-template-rows: repeat(13, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9;
+}
+
+.league-result-events {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.league-result-events,
+.league-bar-col {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.league-result-best {
+  margin-bottom: 8px;
+}
+
+.league-result-best-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.league-result-best {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.league-result-best-underline {
+  width: 120px;
+  height: 2px;
+  background-color: rgba(18, 154, 95, 0.75);
+  border-radius: 2px;
+}
+
+.league-result-best-underline {
+  width: 120px;
+  height: 1px;
+  background-color: rgba(18, 154, 95, 0.75);
+}
+
+.league-result-events-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+
+.league-result-events-list li {
+  margin: 0;
+}
+
+.league-bar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: stretch;
+}
+
+.league-bar-title {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.league-bar {
+  width: 70%;
+  height: 16px;
+  border-radius: 999px;
+  margin: 0 auto;
+}
+
+.league-bar--pb {
+  background-color: rgba(18, 154, 95, 0.15);
+}
+
+.league-bar--expected {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.league-bar--points {
+  background-color: #073d26;
+}
+
+/* Grid cell helpers matching Figma */
+.cell-header {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  align-self: center;
+}
+
+.cell-header--best {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 8px;
+}
+
+.cell-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  align-self: start;
+  justify-self: stretch;
+  margin: 0;
+}
+
+.cell-pill {
+  width: 132px;
+  justify-self: center;
+  align-self: stretch;
+  border-radius: 21px;
+  margin: 0;
+}
+
+.cell-pill--pb {
+  background: rgba(18,154,95,0.15);
+}
+
+.cell-pill--expected {
+  background: rgba(0,0,0,0.7);
+}
+
+.cell-pill--points {
+  background: #073D26;
+}
+
+/* Exact styling for the rightmost "Fina body" pill as requested */
+.league-bar--points {
+  width: 132px;
+  align-self: stretch;
+  grid-row: 2 / span 1;
+  grid-column: 4 / span 1;
+  justify-self: center;
+  border-radius: 21px;
+  background: #073D26;
+  margin: 0 auto;
+}
+
+/* Make the leftmost header and first column visually match the example */
+.league-result-events > .league-result-best {
+  align-items: flex-start;
+}
+
+/* Ensure the top titles align with the bar columns */
+.league-results-grid .league-result-row > .league-bar-col,
+.league-results-grid .league-result-row > .league-result-events {
+  padding-top: 8px;
+}
+
+.league-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.league-pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.league-page-pill {
+  min-width: 34px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(18, 154, 95, 0.75);
+  background-color: rgba(18, 154, 95, 0.15);
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.league-page-pill--active {
+  background-color: #129a5f;
+}
+
+.league-footer {
+  background-color: #073d26;
+  padding: 40px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.league-footer-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.league-footer-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.league-footer-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+}
+
+

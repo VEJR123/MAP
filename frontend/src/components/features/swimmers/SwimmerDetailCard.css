@@ -1,0 +1,154 @@
+/* Container grid matching provided Figma dimensions */
+.swimmer-card {
+  display: grid;
+  width: 572px;
+  height: 574.4px;
+  padding: 20px;
+  row-gap: 16px;
+  column-gap: 16px;
+  flex-shrink: 0;
+  grid-template-rows: repeat(16, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #F9F9F9;
+}
+
+/* left column: avatar + header/meta */
+.swimmer-card-left {
+  grid-column: 1 / 2;
+  grid-row: 1 / 6;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.swimmer-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #e6f7ef 0%, #d3f0e3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #0d263b;
+  font-size: 28px;
+}
+
+.swimmer-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.swimmer-card-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0d263b;
+}
+
+
+.swimmer-card-col-title {
+  font-weight: 600;
+  color: #0d263b;
+  font-size: 14px;
+  align-self: center;
+}
+
+.swimmer-card-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: #4b5563;
+  font-size: 13px;
+}
+
+/* right area: times table */
+.swimmer-card-right {
+  grid-column: 2 / 4;
+  grid-row: 1 / 17;
+}
+
+.swimmer-card-times {
+  display: grid;
+  grid-template-columns: 1fr 160px 160px;
+  gap: 8px 16px;
+  align-items: center;
+}
+
+.swimmer-card-row {
+  display: contents;
+}
+
+.swimmer-card-row--head .swimmer-card-event,
+.swimmer-card-row--head .swimmer-card-value {
+  font-weight: 600;
+  color: #0d263b;
+}
+
+.swimmer-card-event {
+  padding: 10px 0;
+  color: #0d263b;
+}
+
+.swimmer-card-value {
+  padding: 10px 0;
+  text-align: right;
+  color: #111827;
+}
+
+.swimmer-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #129a5f;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 12px;
+}
+.swimmer-pill--empty {
+  background: rgba(0,0,0,0.05);
+  color: #6b7280;
+}
+
+.swimmer-bar-container {
+  width: 100%;
+  height: 18px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+}
+.swimmer-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(17,24,39,0.9);
+  margin-left: 8px;
+}
+
+.swimmer-card-ellipsis {
+  padding: 0 8px;
+  color: #9ca3af;
+}
+
+@media (max-width: 720px) {
+  .swimmer-card {
+    width: 100%;
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .swimmer-card-left {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .swimmer-card-right {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .swimmer-card-times {
+    grid-template-columns: 1fr 120px 120px;
+  }
+}
+
+

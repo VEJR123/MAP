@@ -1,0 +1,15 @@
+{
+  "name": "club/swimming-team-optimizer-backend",
+  "description": "Backend API for Swimming Team Optimizer",
+  "type": "project",
+  "require": {
+    "php": ">=8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}
+
+

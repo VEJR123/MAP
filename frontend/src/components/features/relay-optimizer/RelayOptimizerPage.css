@@ -1,0 +1,228 @@
+.relay-page-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.relay-page-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 24px 80px;
+}
+
+.relay-page-container {
+  max-width: 921px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.relay-page-title {
+  font-size: 40px;
+  font-weight: 600;
+  text-align: center;
+  color: #000;
+}
+
+@media (min-width: 1024px) {
+  .relay-page-title {
+    font-size: 64px;
+  }
+}
+
+.relay-page-tabs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  width: 100%;
+}
+
+.relay-page-tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  height: 45px;
+  position: relative;
+}
+
+.relay-page-tab {
+  font-size: 16px;
+  color: #3f3f46;
+}
+
+.relay-page-tab--active {
+  color: #129a5f;
+}
+
+.relay-page-tab-separator {
+  width: 1px;
+  height: 100%;
+  background-color: #129a5f;
+}
+
+.relay-page-tab-pill {
+  position: absolute;
+  bottom: 0;
+  height: 29px;
+  width: 72px;
+  border-radius: 16px;
+  background-color: rgba(18, 154, 95, 0.15);
+  transform: translateX(-5%);
+}
+
+.relay-config-card {
+  width: 100%;
+  max-width: 793px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #f9f9f9;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.relay-config-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.relay-config-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(18, 154, 95, 0.5);
+}
+
+.relay-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.relay-chip {
+  padding: 3px 23px;
+  border-radius: 16px;
+  border: 1px solid #129a5f;
+  font-size: 16px;
+  font-weight: 500;
+  color: #129a5f;
+  background-color: transparent;
+}
+
+.relay-chip--pill {
+  padding: 7px 23px;
+  height: 27px;
+}
+
+.relay-chip--primary {
+  background-color: #10af70;
+  color: #ffffff;
+  border-color: #10af70;
+}
+
+/* Active state for single-select chip rows */
+.relay-chip--active {
+  background-color: #129a5f;
+  color: #ffffff;
+  border-color: #129a5f;
+}
+
+.relay-results-grid {
+  width: 100%;
+  max-width: 793px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 30px 30px;
+}
+
+@media (min-width: 900px) {
+  .relay-results-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.relay-result-card {
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.relay-result-heading {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.relay-result-list {
+  margin: 0 0 16px;
+  padding-left: 24px;
+}
+
+.relay-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.relay-pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.relay-page-pill {
+  min-width: 34px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(18, 154, 95, 0.75);
+  background-color: rgba(18, 154, 95, 0.15);
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.relay-page-pill--active {
+  background-color: #129a5f;
+}
+
+.relay-footer {
+  background-color: #073d26;
+  padding: 40px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.relay-footer-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.relay-footer-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.relay-footer-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+}
