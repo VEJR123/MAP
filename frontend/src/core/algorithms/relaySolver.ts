@@ -86,58 +86,88 @@ function getCombinations<T>(array: T[], k: number): T[][] {
 }
 
 function solveFreestyle(pool: NormalizedSwimmer[], gender: 'M' | 'F' | 'MIX', distance: number): RelayTeam[] {
-  let swimmersWithTimes: { swimmer: NormalizedSwimmer, time: number }[];
-
   if (gender === 'M' || gender === 'F') {
-    swimmersWithTimes = pool
+    const swimmersWithTimes = pool
       .filter(s => s.gender === gender && getBestTime(s, 'Freestyle', distance) !== Infinity)
-      .map(s => ({ swimmer: s, time: getBestTime(s, 'Freestyle', distance) }))
-      .sort((a, b) => a.time - b.time);
+      .map(s => ({ swimmer: s, time: getBestTime(s, 'Freestyle', distance) }));
+
+    if (swimmersWithTimes.length < 4) return [];
+
+    const combos = getCombinations(swimmersWithTimes, 4);
+    return combos.map(combo => {
+      const totalTime = combo.reduce((sum, s) => sum + s.time, 0);
+      return {
+        swimmers: combo.map(s => ({ swimmer: s.swimmer, stroke: 'Freestyle', time: s.time })),
+        totalTime,
+      };
+    });
   } else { // MIX
-    const men = pool.filter(s => s.gender === 'M' && getBestTime(s, 'Freestyle', distance) !== Infinity).map(s => ({ swimmer: s, time: getBestTime(s, 'Freestyle', distance) })).sort((a, b) => a.time - b.time);
-    const women = pool.filter(s => s.gender === 'F' && getBestTime(s, 'Freestyle', distance) !== Infinity).map(s => ({ swimmer: s, time: getBestTime(s, 'Freestyle', distance) })).sort((a, b) => a.time - b.time);
+    const men = pool
+      .filter(s => s.gender === 'M' && getBestTime(s, 'Freestyle', distance) !== Infinity)
+      .map(s => ({ swimmer: s, time: getBestTime(s, 'Freestyle', distance) }));
+    const women = pool
+      .filter(s => s.gender === 'F' && getBestTime(s, 'Freestyle', distance) !== Infinity)
+      .map(s => ({ swimmer: s, time: getBestTime(s, 'Freestyle', distance) }));
+
     if (men.length < 2 || women.length < 2) return [];
-    swimmersWithTimes = [...men.slice(0, 2), ...women.slice(0, 2)];
+
+    const menCombinations = getCombinations(men, 2);
+    const womenCombinations = getCombinations(women, 2);
+
+    const allTeams: RelayTeam[] = [];
+    for (const menCombo of menCombinations) {
+      for (const womenCombo of womenCombinations) {
+        const teamMembers = [...menCombo, ...womenCombo];
+        const totalTime = teamMembers.reduce((sum, s) => sum + s.time, 0);
+        allTeams.push({
+          swimmers: teamMembers.map(s => ({ swimmer: s.swimmer, stroke: 'Freestyle', time: s.time })),
+          totalTime,
+        });
+      }
+    }
+    return allTeams;
   }
-
-  if (swimmersWithTimes.length < 4) return [];
-
-  const combos = getCombinations(swimmersWithTimes, 4);
-  return combos.map(combo => {
-    const totalTime = combo.reduce((sum, s) => sum + s.time, 0);
-    return {
-      swimmers: combo.map(s => ({ swimmer: s.swimmer, stroke: 'Freestyle', time: s.time })),
-      totalTime,
-    };
-  });
 }
 
 function solveMedley(pool: NormalizedSwimmer[], gender: 'M' | 'F' | 'MIX', distance: number): RelayTeam[] {
   const legs = ['Backstroke', 'Breaststroke', 'Butterfly', 'Freestyle'];
   const allTeams: RelayTeam[] = [];
   
-  const swimmerCombinations = getCombinations(pool, 4);
+  let effectivePool = pool;
+  if (gender === 'M' || gender === 'F') {
+    effectivePool = pool.filter(s => s.gender === gender);
+  }
+
+  const swimmerCombinations = getCombinations(effectivePool, 4);
+
+  // A simple permutation implementation:
+  const perms = (arr: any[]) => {
+    if (arr.length === 0) return [[]];
+    const first = arr[0];
+    const rest = arr.slice(1);
+    const permsWithoutFirst = perms(rest);
+    const allPermutations: any[][] = [];
+    permsWithoutFirst.forEach(p => {
+      for (let i = 0; i <= p.length; i++) {
+        const perm = [...p.slice(0, i), first, ...p.slice(i)];
+        allPermutations.push(perm);
+      }
+    });
+    return allPermutations;
+  };
 
   for (const combo of swimmerCombinations) {
-    const permutations = getCombinations(combo, combo.length); // This is wrong, should be permutations
-    // A simple permutation implementation:
-    const perms = (arr: any[]) => {
-      if (arr.length === 0) return [[]];
-      const first = arr[0];
-      const rest = arr.slice(1);
-      const permsWithoutFirst = perms(rest);
-      const allPermutations: any[][] = [];
-      permsWithoutFirst.forEach(p => {
-        for (let i = 0; i <= p.length; i++) {
-          const perm = [...p.slice(0, i), first, ...p.slice(i)];
-          allPermutations.push(perm);
-        }
-      });
-      return allPermutations;
-    };
+    if (gender === 'MIX') {
+      const menCount = combo.filter((s: NormalizedSwimmer) => s.gender === 'M').length;
+      const womenCount = combo.filter((s: NormalizedSwimmer) => s.gender === 'F').length;
+      if (menCount !== 2 || womenCount !== 2) {
+        continue;
+      }
+    }
 
     const swimmerPermutations = perms(combo);
-
+    let bestTimeForCombo = Infinity;
+    let bestTeamForCombo: RelayLegAssignment[] | null = null;
 
     for (const p of swimmerPermutations) {
       const currentTeam: RelayLegAssignment[] = [];
@@ -156,16 +186,14 @@ function solveMedley(pool: NormalizedSwimmer[], gender: 'M' | 'F' | 'MIX', dista
         currentTotalTime += time;
       }
       
-      if (isValid) {
-        if (gender === 'MIX') {
-          const menCount = p.filter((s: NormalizedSwimmer) => s.gender === 'M').length;
-          const womenCount = p.filter((s: NormalizedSwimmer) => s.gender === 'F').length;
-          if (menCount !== 2 || womenCount !== 2) {
-            continue;
-          }
-        }
-        allTeams.push({ swimmers: currentTeam, totalTime: currentTotalTime });
+      if (isValid && currentTotalTime < bestTimeForCombo) {
+        bestTimeForCombo = currentTotalTime;
+        bestTeamForCombo = currentTeam;
       }
+    }
+
+    if (bestTeamForCombo) {
+      allTeams.push({ swimmers: bestTeamForCombo, totalTime: bestTimeForCombo });
     }
   }
 

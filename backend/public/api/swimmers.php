@@ -83,19 +83,62 @@ try {
         return $snakeCaseArray;
     }
 
+    function processSwimmerRow($row) {
+        // Check if year of birth is in COL 6.
+        // A year is considered valid if it's a number-like string and falls within a reasonable range.
+        $year = is_numeric($row['COL 6']) ? (int)$row['COL 6'] : 0;
+    
+        if ($year >= 1920 && $year <= 2030) {
+            // Data seems correct
+            return [
+                'id' => (int)$row['COL 1'],
+                'first_name' => $row['COL 2'],
+                'last_name' => $row['COL 3'],
+                'new_last_name' => $row['COL 4'],
+                'gender' => strtoupper(trim($row['COL 5'])),
+                'year_of_birth' => $year,
+            ];
+        }
+    
+        // If not in COL 6, check if it's shifted and in COL 5.
+        $shiftedYear = is_numeric($row['COL 5']) ? (int)$row['COL 5'] : 0;
+        if ($shiftedYear >= 1920 && $shiftedYear <= 2030) {
+            // Data is shifted.
+            return [
+                'id' => (int)$row['COL 1'],
+                'first_name' => $row['COL 2'],
+                'last_name' => $row['COL 3'],
+                'new_last_name' => null, 
+                'gender' => strtoupper(trim($row['COL 4'])),
+                'year_of_birth' => $shiftedYear,
+            ];
+        }
+        
+        // If neither contains a valid year, return the original mapping but with a null year.
+        return [
+            'id' => (int)$row['COL 1'],
+            'first_name' => $row['COL 2'],
+            'last_name' => $row['COL 3'],
+            'new_last_name' => $row['COL 4'],
+            'gender' => strtoupper(trim($row['COL 5'])),
+            'year_of_birth' => null,
+        ];
+    }
+
     // GET /api/swimmers
     if ($method === 'GET' && count($parts) === 2) {
         $since = isset($_GET['since']) ? (int)$_GET['since'] : null;
         
         $sql = '
-            SELECT DISTINCT o.`COL 1` as id, o.`COL 2` as first_name, o.`COL 3` as last_name, o.`COL 4` as new_last_name, UPPER(TRIM(o.`COL 5`)) as gender, CAST(o.`COL 6` AS UNSIGNED) as year_of_birth
+            SELECT DISTINCT o.`COL 1`, o.`COL 2`, o.`COL 3`, o.`COL 4`, o.`COL 5`, o.`COL 6`
             FROM oddil o
             JOIN vysledky v ON o.`COL 1` = v.`COL 9`
             WHERE v.`COL 6` >= 2018
         ';
 
         if ($since) {
-            $sql .= ' AND o.`COL 6` >= :since';
+            // We apply the 'since' filter on the most likely column for the year
+            $sql .= ' AND (o.`COL 6` >= :since OR o.`COL 5` >= :since)';
         }
 
         $stmt = $pdo->prepare($sql);
@@ -105,7 +148,10 @@ try {
         }
         
         $stmt->execute();
-        $swimmers = $stmt->fetchAll();
+        $rawSwimmers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $swimmers = array_map('processSwimmerRow', $rawSwimmers);
+
         echo json_encode(toCamelCase($swimmers), JSON_UNESCAPED_UNICODE);
         exit;
     }
@@ -113,22 +159,25 @@ try {
     // GET /api/swimmers/{id}
     if ($method === 'GET' && count($parts) === 3) {
         $rawId = $parts[2];
+        $rawSwimmer = null;
 
         // If caller passed a numeric id, lookup directly. Otherwise treat as name and search oddil by name.
         if (ctype_digit($rawId)) {
-            $stmt = $pdo->prepare('SELECT `COL 1` as id, `COL 2` as first_name, `COL 3` as last_name, `COL 4` as new_last_name, UPPER(TRIM(`COL 5`)) as gender, `COL 6` as year_of_birth FROM oddil WHERE `COL 1` = ?');
+            $stmt = $pdo->prepare('SELECT `COL 1`, `COL 2`, `COL 3`, `COL 4`, `COL 5`, `COL 6` FROM oddil WHERE `COL 1` = ?');
             $stmt->execute([$rawId]);
-            $swimmer = $stmt->fetch();
+            $rawSwimmer = $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
             $nameQuery = urldecode($rawId);
             $q = '%' . $nameQuery . '%';
-            $stmt = $pdo->prepare('SELECT `COL 1` as id, `COL 2` as first_name, `COL 3` as last_name, `COL 4` as new_last_name, UPPER(TRIM(`COL 5`)) as gender, `COL 6` as year_of_birth FROM oddil WHERE CONCAT(`COL 2`," ",`COL 3`) LIKE :q OR CONCAT(`COL 2`," ",`COL 4`) LIKE :q OR `COL 2` LIKE :q OR `COL 3` LIKE :q LIMIT 1');
+            $stmt = $pdo->prepare('SELECT `COL 1`, `COL 2`, `COL 3`, `COL 4`, `COL 5`, `COL 6` FROM oddil WHERE CONCAT(`COL 2`," ",`COL 3`) LIKE :q OR CONCAT(`COL 2`," ",`COL 4`) LIKE :q OR `COL 2` LIKE :q OR `COL 3` LIKE :q LIMIT 1');
             $stmt->bindParam(':q', $q);
             $stmt->execute();
-            $swimmer = $stmt->fetch();
+            $rawSwimmer = $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
-        if (!$swimmer) { http_response_code(404); echo json_encode(['error'=>'Not found'], JSON_UNESCAPED_UNICODE); exit; }
+        if (!$rawSwimmer) { http_response_code(404); echo json_encode(['error'=>'Not found'], JSON_UNESCAPED_UNICODE); exit; }
+
+        $swimmer = processSwimmerRow($rawSwimmer);
 
         // Use the swimmer id (from oddil) to fetch results from vysledky
         $swimmerId = $swimmer['id'];
