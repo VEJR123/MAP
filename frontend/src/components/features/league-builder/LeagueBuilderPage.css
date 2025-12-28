@@ -127,6 +127,11 @@
   border-color: #10af70;
 }
 
+.league-chip--active {
+  background-color: #129a5f;
+  color: #ffffff;
+}
+
 .league-results-grid {
   width: 100%;
   max-width: 793px;
@@ -134,6 +139,26 @@
   flex-direction: column;
   gap: 24px;
 }
+
+.league-composition-card {
+  width: 100%;
+  max-width: 793px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #ffffff;
+  padding: 12px 16px;
+}
+.league-composition-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+.league-composition-card ul {
+  margin: 0;
+  padding-left: 18px;
+  max-height: 140px;
+  overflow: auto;
+}
+
 
 .league-result-row {
   display: grid;
